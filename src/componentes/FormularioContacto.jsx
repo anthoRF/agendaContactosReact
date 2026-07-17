@@ -7,52 +7,78 @@ function FormularioContacto({
   alCambiarNombre,
   alCambiarCorreo,
   alCambiarTelefono,
-  alGuardar,
-  alCancelar,
+  alGuardar
 }) {
+
   return (
     <section className="seccion">
-      <h2>{estaEditando ? "Editar contacto" : "Registrar contacto"}</h2>
 
-      <form onSubmit={alGuardar} noValidate>
-        <label htmlFor="nombre">Nombre completo</label>
+      <h2>
+        {estaEditando ? "Editar contacto" : "Registrar contacto"}
+      </h2>
+
+      <form
+        onSubmit={alGuardar}
+        noValidate
+      >
+
+        <label htmlFor="nombre">
+          Nombre completo
+        </label>
+
         <input
           id="nombre"
           type="text"
           value={nombre}
-          onChange={(evento) => alCambiarNombre(evento.target.value)}
+          onChange={(evento) => { alCambiarNombre(evento.target.value); }}
         />
 
-        <label htmlFor="correo">Correo electrónico</label>
+
+        <label htmlFor="correo">
+          Correo electrónico
+        </label>
+
         <input
           id="correo"
           type="email"
           value={correo}
-          onChange={(evento) => alCambiarCorreo(evento.target.value)}
+          onChange={(evento) => { alCambiarCorreo(evento.target.value); }}
         />
 
-        <label htmlFor="telefono">Teléfono</label>
+
+        <label htmlFor="telefono">
+          Teléfono
+        </label>
+
         <input
           id="telefono"
           type="tel"
           value={telefono}
-          onChange={(evento) => alCambiarTelefono(evento.target.value)}
+          onChange={(evento) => {
+            alCambiarTelefono(evento.target.value);
+          }}
         />
 
-        {mensajeError !== "" && <p className="mensaje-error">{mensajeError}</p>}
+
+        <p className="mensaje-error">
+          {mensajeError}
+        </p>
+
 
         <div className="acciones-formulario">
+
           <button type="submit">
-            {estaEditando ? "Actualizar" : "Guardar"}
+
+            {estaEditando
+              ? "Actualizar"
+              : "Guardar"}
+
           </button>
 
-          {estaEditando && (
-            <button type="button" className="boton-secundario" onClick={alCancelar}>
-              Cancelar
-            </button>
-          )}
         </div>
+
       </form>
+
     </section>
   );
 }
