@@ -4,6 +4,7 @@ import FormularioContacto from "./componentes/FormularioContacto";
 import ListaContactos from "./componentes/ListaContactos";
 
 function App() {
+
   const [contactos, setContactos] = useState([]);
   const [nombre, setNombre] = useState("");
   const [correo, setCorreo] = useState("");
@@ -13,19 +14,24 @@ function App() {
   const [mensajeError, setMensajeError] = useState("");
 
   function validarFormulario() {
-    const formatoCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const soloNumeros = /^[0-9]+$/;
 
-    if (nombre.trim() === "" || correo.trim() === "" || telefono.trim() === "") {
-      return "Complete todos los campos antes de guardar.";
+    if (
+      nombre.trim() === "" ||
+      correo.trim() === "" ||
+      telefono.trim() === ""
+    ) {
+      return "Complete todos los campos.";
     }
 
-    if (!formatoCorreo.test(correo)) {
-      return "Ingrese un correo válido, por ejemplo: tecnicas@unemi.com.";
+    if (
+      !correo.includes("@") ||
+      !correo.includes(".")
+    ) {
+      return "Ingrese un correo válido.";
     }
 
-    if (!soloNumeros.test(telefono)) {
-      return "El teléfono debe contener únicamente números.";
+    if (isNaN(telefono)) {
+      return "El teléfono debe contener solo números.";
     }
 
     return "";
@@ -40,6 +46,7 @@ function App() {
   }
 
   function guardarContacto(evento) {
+
     evento.preventDefault();
 
     const error = validarFormulario();
@@ -49,27 +56,39 @@ function App() {
       return;
     }
 
+
     if (idEditando === null) {
+
       const nuevoContacto = {
         id: Date.now(),
-        nombre: nombre.trim(),
-        correo: correo.trim(),
-        telefono: telefono.trim(),
+        nombre: nombre,
+        correo: correo,
+        telefono: telefono
       };
 
-      setContactos([...contactos, nuevoContacto]);
-    } else {
-      const contactosActualizados = contactos.map((contacto) => {
-        if (contacto.id === idEditando) {
-          return {
-            ...contacto,
-            nombre: nombre.trim(),
-            correo: correo.trim(),
-            telefono: telefono.trim(),
-          };
-        }
+      setContactos([
+        ...contactos,
+        nuevoContacto
+      ]);
 
-        return contacto;
+    } else {
+
+      const contactosActualizados = contactos.map((contacto) => {
+
+        if (contacto.id === idEditando) {
+
+          return {
+            id: contacto.id,
+            nombre: nombre,
+            correo: correo,
+            telefono: telefono
+          };
+
+        } else {
+
+          return contacto;
+
+        }
       });
 
       setContactos(contactosActualizados);
@@ -79,6 +98,7 @@ function App() {
   }
 
   function editarContacto(contacto) {
+
     setNombre(contacto.nombre);
     setCorreo(contacto.correo);
     setTelefono(contacto.telefono);
@@ -87,12 +107,16 @@ function App() {
   }
 
   function eliminarContacto(id) {
-    const deseaEliminar = window.confirm("¿Desea eliminar este contacto?");
 
-    if (deseaEliminar) {
-      const contactosRestantes = contactos.filter(
-        (contacto) => contacto.id !== id,
-      );
+    const confirmar = window.confirm(
+      "¿Desea eliminar este contacto?"
+    );
+
+    if (confirmar === true) {
+
+      const contactosRestantes = contactos.filter((contacto) => {
+        return contacto.id !== id;
+      });
 
       setContactos(contactosRestantes);
 
@@ -102,12 +126,18 @@ function App() {
     }
   }
 
-  const contactosFiltrados = contactos.filter((contacto) =>
-    contacto.nombre.toLowerCase().includes(busqueda.toLowerCase()),
-  );
+  const contactosFiltrados = contactos.filter((contacto) => {
+
+    return contacto.nombre
+      .toLowerCase()
+      .includes(busqueda.toLowerCase());
+
+  });
+
 
   return (
     <main className="contenedor">
+
       <h1>Agenda de contactos de empleados</h1>
 
       <Buscador
@@ -125,7 +155,6 @@ function App() {
         alCambiarCorreo={setCorreo}
         alCambiarTelefono={setTelefono}
         alGuardar={guardarContacto}
-        alCancelar={limpiarFormulario}
       />
 
       <ListaContactos
@@ -133,6 +162,7 @@ function App() {
         alEditar={editarContacto}
         alEliminar={eliminarContacto}
       />
+
     </main>
   );
 }
